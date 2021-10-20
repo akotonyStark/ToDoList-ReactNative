@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { CheckBox, Text, StyleSheet, View } from 'react-native';
+import {
+  CheckBox,
+  Text,
+  Button,
+  StyleSheet,
+  View,
+  ScrollView,
+} from 'react-native';
 
 import Constants from 'expo-constants';
 
@@ -9,56 +16,61 @@ import Task from './components/Task';
 // or any pure javascript modules available in npm
 import { TextInput, Card } from 'react-native-paper';
 
-const seedData = [
-  {
-    taskName: 'Learn React',
-    isCompleted: true,
-    id: 'task 1',
-  },
-
-  {
-    taskName: 'Upgrade to React Native',
-    isCompleted: false,
-    id: 'task 2',
-  },
-
-  {
-    taskName: 'Intro to Flutter',
-    isCompleted: false,
-    id: 'task 3',
-  },
-
-  {
-    taskName: 'iOS Dev',
-    isCompleted: true,
-    id: 'task 4',
-  },
-
-  {
-    taskName: 'Kotlin Android',
-    isCompleted: true,
-    id: 'task 5',
-  },
-];
+// const seedData = [
+//   {
+//     taskName: 'Learn React',
+//     isCompleted: true,
+//     id: 'task 1',
+//   },
+// ];
 
 export default function App() {
   const [isSelected, setSelection] = React.useState(false);
+  const [tasks, setTasks] = React.useState([])
+  const [taskName, setTaskName] = React.useState("");
+
+  const addListItemHandler = () => {
+    let newItem = {
+      taskName: taskName,
+      isCompleted: false,
+      id: 'Task' + Math.floor(Math.random(10) * 1000),
+    };
+    console.log([...tasks, newItem]);
+    setTasks((task) => [...tasks, newItem]);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Todo List</Text>
-
-        <View style={styles.items}>
-          {seedData.map((item) => {
-            return <Task id={item.id} name = {item.taskName} isCompleted = {item.isCompleted}/>
-          })}
-        </View>
+        <ScrollView style ={{height: '80%', marginBottom:20}}>
+          <View style={styles.items}>
+            {tasks.length === 0 ? null : tasks.map((item) => {
+              return (
+                <Task
+                  id={item.id}
+                  name={item.taskName}
+                  isCompleted={item.isCompleted}
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
 
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
             placeholder="Type something here..."
+            value={taskName}
+            onChange={(value) => {
+              setTaskName(value.nativeEvent.text);
+            }}
+          />
+
+          <Button
+            style={{ width: 10 }}
+            title="Add"
+            onPress={addListItemHandler}
           />
         </View>
       </View>
@@ -71,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'start',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: '#f1f1f1',
     padding: 8,
   },
   tasksWrapper: {
@@ -96,5 +108,6 @@ const styles = StyleSheet.create({
   textInput: {
     backgroundColor: 'white',
     height: 50,
+    marginBottom: 10,
   },
 });
