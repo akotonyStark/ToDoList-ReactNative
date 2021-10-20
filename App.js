@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import {
-  CheckBox,
+import {  
   Text,
   Button,
   StyleSheet,
@@ -15,11 +14,10 @@ import Constants from 'expo-constants';
 // You can import from local files
 import Task from './components/Task';
 import EmptyList from './components/EmptyList';
-import {RoundedButton} from './components/RoundedButton';
+import { RoundedButton } from './components/RoundedButton';
 
 // or any pure javascript modules available in npm
 import { TextInput, Card } from 'react-native-paper';
-
 
 export default function App() {
   const [isSelected, setSelection] = React.useState(false);
@@ -33,8 +31,17 @@ export default function App() {
       id: 'Task' + Math.floor(Math.random(10) * 1000),
     };
     console.log([...tasks, newItem]);
-    setTasks((task) => [...tasks, newItem]);
+    setTasks((tasks) => [...tasks, newItem]);  
+    setTaskName('');
   };
+
+  const clearListHandler = () => {
+    setTasks((tasks) => []);
+  };
+
+  React.useEffect(() => {
+    console.log('something changed');
+  }, [tasks]);
 
   return (
     <View style={styles.container}>
@@ -50,9 +57,10 @@ export default function App() {
               {tasks.length === 0 ? (
                 <EmptyList />
               ) : (
-                tasks.map((item) => {
+                tasks.map((item, index) => {
                   return (
                     <Task
+                      key = {index}
                       id={item.id}
                       name={item.taskName}
                       isCompleted={item.isCompleted}
@@ -64,6 +72,7 @@ export default function App() {
           </ScrollView>
 
           <View style={styles.inputContainer}>
+            {tasks.length > 0 ?  <RoundedButton title="Clear" onPress={clearListHandler} /> : null}
             <TextInput
               style={styles.textInput}
               placeholder="Type something here..."
@@ -72,8 +81,7 @@ export default function App() {
                 setTaskName(value.nativeEvent.text);
               }}
             />
-
-           <RoundedButton title = "Add" onPress={addListItemHandler}/>    
+            <RoundedButton title="+" onPress={addListItemHandler} />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -93,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tasksWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
     paddingTop: 30,
     height: '100%',
   },
@@ -109,14 +117,15 @@ const styles = StyleSheet.create({
   inputContainer: {
     display: 'flex',
     flexDirection: 'row',
-    // height: '10%',
-    justifyContent: 'flex-end',
+    padding: 0,
+    justifyContent: 'space-evenly',
+    //backgroundColor: 'red',
   },
   textInput: {
     backgroundColor: '#f1f1f1',
     height: 50,
-    marginBottom: 10,
-    width: '90%',
-    marginRight: 10
+    width: '75%',
+    marginRight: 10,
+    marginLeft: 10,
   },
 });
