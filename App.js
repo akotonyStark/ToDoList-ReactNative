@@ -6,28 +6,25 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import Constants from 'expo-constants';
 
 // You can import from local files
 import Task from './components/Task';
+import EmptyList from './components/EmptyList';
+import {RoundedButton} from './components/RoundedButton';
 
 // or any pure javascript modules available in npm
 import { TextInput, Card } from 'react-native-paper';
 
-// const seedData = [
-//   {
-//     taskName: 'Learn React',
-//     isCompleted: true,
-//     id: 'task 1',
-//   },
-// ];
 
 export default function App() {
   const [isSelected, setSelection] = React.useState(false);
-  const [tasks, setTasks] = React.useState([])
-  const [taskName, setTaskName] = React.useState("");
+  const [tasks, setTasks] = React.useState([]);
+  const [taskName, setTaskName] = React.useState('');
 
   const addListItemHandler = () => {
     let newItem = {
@@ -41,39 +38,45 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Todo List</Text>
-        <ScrollView style ={{height: '80%', marginBottom:20}}>
-          <View style={styles.items}>
-            {tasks.length === 0 ? null : tasks.map((item) => {
-              return (
-                <Task
-                  id={item.id}
-                  name={item.taskName}
-                  isCompleted={item.isCompleted}
-                />
-              );
-            })}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboard}>
+        <View style={styles.tasksWrapper}>
+          <Text style={styles.sectionTitle}>Todo List</Text>
+
+          <ScrollView
+            style={{ height: '80%', marginBottom: 20, marginTop: 10 }}>
+            <View style={styles.items}>
+              {tasks.length === 0 ? (
+                <EmptyList />
+              ) : (
+                tasks.map((item) => {
+                  return (
+                    <Task
+                      id={item.id}
+                      name={item.taskName}
+                      isCompleted={item.isCompleted}
+                    />
+                  );
+                })
+              )}
+            </View>
+          </ScrollView>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Type something here..."
+              value={taskName}
+              onChange={(value) => {
+                setTaskName(value.nativeEvent.text);
+              }}
+            />
+
+           <RoundedButton title = "Add" onPress={addListItemHandler}/>    
           </View>
-        </ScrollView>
-
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Type something here..."
-            value={taskName}
-            onChange={(value) => {
-              setTaskName(value.nativeEvent.text);
-            }}
-          />
-
-          <Button
-            style={{ width: 10 }}
-            title="Add"
-            onPress={addListItemHandler}
-          />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -83,12 +86,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'start',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#f1f1f1',
-    padding: 8,
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  keyboard: {
+    flex: 1,
   },
   tasksWrapper: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: 10,
+    paddingTop: 30,
+    height: '100%',
   },
   sectionTitle: {
     fontSize: 24,
@@ -101,13 +108,15 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     display: 'flex',
-    flexDirection: 'column',
-    height: '10%',
+    flexDirection: 'row',
+    // height: '10%',
     justifyContent: 'flex-end',
   },
   textInput: {
-    backgroundColor: 'white',
+    backgroundColor: '#f1f1f1',
     height: 50,
     marginBottom: 10,
+    width: '90%',
+    marginRight: 10
   },
 });
