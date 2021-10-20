@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React from 'react';
 import { Text, View, CheckBox, StyleSheet, Image } from 'react-native';
 
 export default function Task(props) {
