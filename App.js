@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import {  
+import { Icon } from 'react-native-elements';
+import {
   Text,
   Button,
   StyleSheet,
@@ -31,7 +32,7 @@ export default function App() {
       id: 'Task' + Math.floor(Math.random(10) * 1000),
     };
     console.log([...tasks, newItem]);
-    setTasks((tasks) => [...tasks, newItem]);  
+    setTasks((tasks) => [...tasks, newItem]);
     setTaskName('');
   };
 
@@ -60,7 +61,7 @@ export default function App() {
                 tasks.map((item, index) => {
                   return (
                     <Task
-                      key = {index}
+                      key={index}
                       id={item.id}
                       name={item.taskName}
                       isCompleted={item.isCompleted}
@@ -72,7 +73,15 @@ export default function App() {
           </ScrollView>
 
           <View style={styles.inputContainer}>
-            {tasks.length > 0 ?  <RoundedButton title="Clear" onPress={clearListHandler} /> : null}
+            {tasks.length > 0 ? (
+              <Icon
+                reverse
+                name="close"
+                type="material"
+                color="#F9A826"
+                onPress={clearListHandler}
+              />
+            ) : null}
             <TextInput
               style={styles.textInput}
               placeholder="Type something here..."
@@ -81,7 +90,14 @@ export default function App() {
                 setTaskName(value.nativeEvent.text);
               }}
             />
-            <RoundedButton title="+" onPress={addListItemHandler} />
+
+            <Icon
+              reverse
+              name="add"
+              type="material"
+              color="#F9A826"
+              onPress={addListItemHandler}
+            />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -123,7 +139,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     backgroundColor: '#f1f1f1',
-    height: 50,
+    height: 20,
     width: '75%',
     marginRight: 10,
     marginLeft: 10,
