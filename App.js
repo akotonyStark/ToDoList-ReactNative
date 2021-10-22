@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 
 import Constants from 'expo-constants';
@@ -55,7 +56,17 @@ export default function App() {
           style={styles.keyboard}>
           <View style={styles.tasksWrapper}>
             <Text style={styles.sectionTitle}>Todo List</Text>
-
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              {tasks.length > 0 ? (
+                <TouchableOpacity
+                  onPress={clearListHandler}
+                  style={styles.clearAll}>
+                  <Text style={{ justifyContent: 'center', color: 'white' }}>
+                    Clear Tasks
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
             <ScrollView
               style={{ height: '80%', marginBottom: 20, marginTop: 10 }}>
               <View style={styles.items}>
@@ -83,29 +94,14 @@ export default function App() {
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
                 }}>
-                {tasks.length > 0 ? (
-                  <Icon
-                    reverse
-                    name="close"
-                    type="material"
-                    color="red"
-                    onPress={clearListHandler}
-                  />
-                ) : null}
-              </View>
-
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                }}>
-                <Icon
-                  reverse
+                <Icon                  
+                  reverse                                 
+                  raised={true}
                   name="add"
                   type="material"
                   color="#F9A826"
                   onPress={() => setModalVisible(!modalVisible)}
+                  onLongPress = {() => alert('You long pressed')}
                 />
               </View>
             </View>
@@ -156,4 +152,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     //backgroundColor: 'red',
   },
+  clearAll: {
+    backgroundColor: '#2980B9',
+    height: 30,
+    width: 80,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    borderRadius: 20,
+  }
 });
