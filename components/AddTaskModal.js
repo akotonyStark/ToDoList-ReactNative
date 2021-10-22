@@ -16,12 +16,16 @@ const AddTaskModal = (props) => {
   const [taskName, setTaskName] = React.useState('');
   let {tasks, setModalVisible, modalVisible, setTasks} = props
 
-  console.log('Tasks', tasks);
+  console.log('Tasks', tasks); 
 
   const addListItemHandler = () => {
+    if(!taskName){
+      alert('Enter a task')
+      return
+    }
     let newItem = {
       taskName: taskName,
-      isCompleted: false,
+      isCompleted: false,     
       id: 'Task' + Math.floor(Math.random(10) * 1000),
     };
     console.log([...tasks, newItem]);
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    justifyContent: 'center'
   },
   inputStyle: {
     color: 'black',
