@@ -8,6 +8,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from 'react-native';
 
 import Constants from 'expo-constants';
@@ -16,14 +17,27 @@ import Constants from 'expo-constants';
 import Task from './components/Task';
 import EmptyList from './components/EmptyList';
 import { RoundedButton } from './components/RoundedButton';
+import TaskInput from './components/TaskInput';
+import AddTaskModal from './components/AddTaskModal';
+import BottomModalPopup from './components/BottomModalPopup';
 
 // or any pure javascript modules available in npm
 import { TextInput, Card } from 'react-native-paper';
+import {
+  useBottomModal,
+  BottomModal,
+  BottomModalRef,
+} from 'react-native-lightning-modal';
 
 export default function App() {
   const [isSelected, setSelection] = React.useState(false);
   const [tasks, setTasks] = React.useState([]);
   const [taskName, setTaskName] = React.useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const { dismiss, show, modalProps } = useBottomModal();
+
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
 
   const addListItemHandler = () => {
     let newItem = {
@@ -45,63 +59,77 @@ export default function App() {
   }, [tasks]);
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}>
-        <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>Todo List</Text>
+    <>
+      <View style={styles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboard}>
+          <View style={styles.tasksWrapper}>
+            <Text style={styles.sectionTitle}>Todo List</Text>
 
-          <ScrollView
-            style={{ height: '80%', marginBottom: 20, marginTop: 10 }}>
-            <View style={styles.items}>
-              {tasks.length === 0 ? (
-                <EmptyList />
-              ) : (
-                tasks.map((item, index) => {
-                  return (
-                    <Task
-                      key={index}
-                      id={item.id}
-                      name={item.taskName}
-                      isCompleted={item.isCompleted}
-                    />
-                  );
-                })
-              )}
+            <ScrollView
+              style={{ height: '80%', marginBottom: 20, marginTop: 10 }}>
+              <View style={styles.items}>
+                {tasks.length < 1 ? (
+                  <EmptyList />
+                ) : (
+                  tasks.map((item, index) => {
+                    return (
+                      <Task
+                        key={index}
+                        id={item.id}
+                        name={item.taskName}
+                        isCompleted={item.isCompleted}
+                      />
+                    );
+                  })
+                )}
+              </View>
+            </ScrollView>
+
+            <View style={styles.inputContainer}>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                }}>
+                {tasks.length > 0 ? (
+                  <Icon
+                    reverse
+                    name="close"
+                    type="material"
+                    color="red"
+                    onPress={clearListHandler}
+                  />
+                ) : null}
+              </View>
+
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                }}>
+                <Icon
+                  reverse
+                  name="add"
+                  type="material"
+                  color="#F9A826"
+                  onPress={() => setModalVisible(!modalVisible)}
+                />
+              </View>
             </View>
-          </ScrollView>
-
-          <View style={styles.inputContainer}>
-            {tasks.length > 0 ? (
-              <Icon
-                reverse
-                name="close"
-                type="material"
-                color="#F9A826"
-                onPress={clearListHandler}
-              />
-            ) : null}
-            <TextInput
-              style={styles.textInput}
-              placeholder="Type something here..."
-              value={taskName}
-              onChange={(value) => {
-                setTaskName(value.nativeEvent.text);
-              }}
-            />
-
-            <Icon
-              reverse
-              name="add"
-              type="material"
-              color="#F9A826"
-              onPress={addListItemHandler}
-            />
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+        </KeyboardAvoidingView>
+        {modalVisible ? (
+          <AddTaskModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
+        ) : null}
+      </View>
+    </>
   );
 }
 
@@ -132,16 +160,9 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 0,
-    justifyContent: 'space-evenly',
+    justifyContent: 'flex-end',
     //backgroundColor: 'red',
-  },
-  textInput: {
-    backgroundColor: '#f1f1f1',
-    height: 20,
-    width: '75%',
-    marginRight: 10,
-    marginLeft: 10,
   },
 });
