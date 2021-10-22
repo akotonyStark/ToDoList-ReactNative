@@ -8,9 +8,28 @@ import {
   TouchableOpacity,
   Pressable,
   View,
+  DatePickerIOS,
 } from 'react-native';
 
-const AddTaskModal = ({ setModalVisible, modalVisible = {modalVisible} }) => {
+const AddTaskModal = (props) => {
+  const [chosenDate, setChosenDate] = useState(new Date());
+  const [taskName, setTaskName] = React.useState('');
+  let {tasks, setModalVisible, modalVisible, setTasks} = props
+
+  console.log('Tasks', tasks);
+
+  const addListItemHandler = () => {
+    let newItem = {
+      taskName: taskName,
+      isCompleted: false,
+      id: 'Task' + Math.floor(Math.random(10) * 1000),
+    };
+    console.log([...tasks, newItem]);
+    setTasks((tasks) => [...tasks, newItem]);
+    setTaskName('');
+    setModalVisible(!modalVisible);
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -24,11 +43,15 @@ const AddTaskModal = ({ setModalVisible, modalVisible = {modalVisible} }) => {
         <View>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Task Details</Text>
-            <TextInput style={styles.inputStyle} placeholder="Title" />
-            <TextInput style={styles.inputStyle} placeholder="Priority" />
+            <TextInput
+              value={taskName}
+              onChange={(value) => setTaskName(value.nativeEvent.text)}
+              style={styles.inputStyle}
+              placeholder="Title"
+            />
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
+              onPress={addListItemHandler}>
               <Text style={styles.textStyle}>Add Task</Text>
             </TouchableOpacity>
           </View>
@@ -77,17 +100,17 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     color: 'black',
-    fontWeight: 'bold',
     backgroundColor: '#fff',
     marginBottom: 10,
-    width:250,
+    width: 250,
     padding: 10,
     height: 40,
+    borderRadius: 20,
   },
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-    width:500
+    width: 500,
   },
 });
 
