@@ -32,23 +32,12 @@ import {
 export default function App() {
   const [isSelected, setSelection] = React.useState(false);
   const [tasks, setTasks] = React.useState([]);
-  const [taskName, setTaskName] = React.useState('');
+
   const [modalVisible, setModalVisible] = useState(false);
   const { dismiss, show, modalProps } = useBottomModal();
 
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-
-  const addListItemHandler = () => {
-    let newItem = {
-      taskName: taskName,
-      isCompleted: false,
-      id: 'Task' + Math.floor(Math.random(10) * 1000),
-    };
-    console.log([...tasks, newItem]);
-    setTasks((tasks) => [...tasks, newItem]);
-    setTaskName('');
-  };
 
   const clearListHandler = () => {
     setTasks((tasks) => []);
@@ -126,6 +115,8 @@ export default function App() {
           <AddTaskModal
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
+            tasks={tasks}
+            setTasks={setTasks}
           />
         ) : null}
       </View>
