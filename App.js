@@ -99,7 +99,7 @@ export default function App() {
                   raised={true}
                   name="add"
                   type="material"
-                  color="#F9A826"
+                  color="#222222"
                   onPress={() => setModalVisible(!modalVisible)}
                   onLongPress = {() => alert('You long pressed')}
                 />
@@ -114,7 +114,12 @@ export default function App() {
             tasks={tasks}
             setTasks={setTasks}
           />
-        ) : null}
+        ) : <AddTaskModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            tasks={tasks}
+            setTasks={setTasks}
+          />}
       </View>
     </>
   );
