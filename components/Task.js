@@ -9,18 +9,18 @@ export default function Task(props) {
   return (
     <View style={[styles.item, styles.card, styles.shadowProp]}>
       <View style={styles.task}>
-        <Icon
-          name="description"
-          type="material"
-          color="#2980B9"          
-        />
+       <Image
+        style={styles.tinyLogo}
+        source={require('@expo/snack-static/react-native-logo.png')}
+      />
         <Text
           style={{
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'flex-start',
             marginLeft: 15,
-            fontSize: 18
+            fontSize: 18,
+            color: '#5f9ea0'
           }}>
           {props.name}
         </Text>
@@ -50,13 +50,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     //justifyContent: 'flex-end'
-  },
-  checkbox: {
-    alignSelf: 'right',
-    marginRight: 10,
-  },
+  },  
   card: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#222222',
     borderRadius: 8,
     paddingVertical: 20,
     paddingHorizontal: 15,
@@ -68,5 +64,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+  }, 
+  tinyLogo: {
+    width: 30,
+    height: 30,
   },
+
 });
+
+
